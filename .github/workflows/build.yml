@@ -103,21 +103,27 @@ jobs:
           unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
           license: ${{ secrets.UNITY_LICENSE }}
 
+      - name: Upload WebGL Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-WebGL
+          path: build/WebGL
+
   deployPages:
-      needs: buildWebGL
-      name: Deploy to Github Pages 🚀
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    needs: buildWebGL
+    name: Deploy to Github Pages 🚀
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   
-        - uses: actions/download-artifact@v3
-          with:
-            name: build-WebGL
-            path: build
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-WebGL
+          path: build
   
-        - name: Deploy 🚀
-          uses: JamesIves/github-pages-deploy-action@4.1.4
-          with:
-            branch: gh-pages
-            folder: build/WebGL
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: build/WebGL
