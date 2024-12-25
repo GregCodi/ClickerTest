@@ -3,9 +3,9 @@ name: GameCI Template 🎮
 on: push
 
 env:
-  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}         # Ваш email для Unity
-  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}   # Ваш пароль для Unity
-  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}     # Лицензионный ключ Unity
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
   buildWebGL:
@@ -46,18 +46,18 @@ jobs:
           targetPlatform: WebGL
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           buildName: WebGL Build
-          buildPath: build/WebGL
+          buildPath: build
           unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
           license: ${{ secrets.UNITY_LICENSE }}
 
       - name: List build directory
-        run: ls -R build/WebGL  # Отображает содержимое директории сборки
+        run: ls -R build/WebGL\ Build  # Отображает содержимое директории сборки
 
       - name: Upload WebGL Build Artifact
         uses: actions/upload-artifact@v3
         with:
           name: build-WebGL
-          path: build/WebGL
+          path: build/WebGL\ Build
 
   deployPages:
     needs: buildWebGL
@@ -66,17 +66,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-  
+
       - uses: actions/download-artifact@v3
         with:
           name: build-WebGL
           path: build
-  
-      - name: List downloaded directory
-        run: ls -R build  # Отображает содержимое директории после загрузки артефакта
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: build/WebGL
+          folder: build/WebGL\ Build  # Исправленный путь
+
