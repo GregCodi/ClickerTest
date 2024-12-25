@@ -3,23 +3,23 @@ name: GameCI Template 🎮
 on: push
 
 env:
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
   buildWebGL:
     name: Build for WebGL 🖥️
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
       - name: Restore LFS cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: lfs-cache
         with:
           path: .git/lfs
@@ -32,19 +32,26 @@ jobs:
           git reset --hard
 
       - name: Restore Library cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: Library
           key: Library-build-WebGL
           restore-keys: |
-            Library-build-
+            Library-build-WebGL-
             Library-
 
-      - uses: game-ci/unity-builder@v2
+      - name: Build WebGL
+        uses: game-ci/unity-builder@v4
         with:
           targetPlatform: WebGL
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          buildName: build-WebGL
+          buildPath: build/WebGL
+          unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
+          license: ${{ secrets.UNITY_LICENSE }}
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload WebGL Build Artifact
+        uses: actions/upload-artifact@v3
         with:
           name: build-WebGL
           path: build/WebGL
@@ -55,9 +62,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: build-WebGL
           path: build
@@ -66,4 +73,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.7.2
         with:
           branch: gh-pages
-          folder: build/WebGL
+          folder: build/WebGL # Исправленный путь
