@@ -1,0 +1,2 @@
+Build path: D:/UnityProjects/ClickerTest/Build
+Build number: 1
