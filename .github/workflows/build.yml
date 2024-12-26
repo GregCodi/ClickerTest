@@ -46,7 +46,7 @@ jobs:
           targetPlatform: WebGL
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           buildName: build-WebGL
-          buildPath: build/WebGL
+          buildPath: bild/WebGL
           unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
           license: ${{ secrets.UNITY_LICENSE }}
 
