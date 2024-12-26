@@ -50,6 +50,11 @@ jobs:
           unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
           license: ${{ secrets.UNITY_LICENSE }}
 
+      - name: Copy build to root
+        run: |
+            cp -r build/WebGL/* .
+            rm -rf build/WebGL # Удаляем временную директорию
+          
       - name: Upload WebGL Build Artifact
         uses: actions/upload-artifact@v3
         with:
