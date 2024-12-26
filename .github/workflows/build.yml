@@ -54,7 +54,10 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-WebGL
-          path: build/WebGL
+          path: bild/WebGL
+          
+      - name: Check build directory
+        run: ls -la bild/WebGL
 
   deployPages:
     needs: buildWebGL
@@ -67,10 +70,10 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-WebGL
-          path: build
+          path: bild
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: build/WebGL # Исправленный путь
+          folder: bild/WebGL
