@@ -9,7 +9,6 @@ env:
 
 jobs:
   buildWebGL:
-    permissions: write-all
     name: Build for WebGL 🖥️
     runs-on: ubuntu-latest
     steps:
@@ -46,23 +45,16 @@ jobs:
         with:
           targetPlatform: WebGL
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          buildName: build-WebGL
-          buildPath: build/WebGL
+          buildName: build-WebGLe
+          buildPath: build/WebGLe
           unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
           license: ${{ secrets.UNITY_LICENSE }}
 
-      - name: Copy build to root
-        run: |
-          cp -r build/WebGL/* .
-          chmod -R 777 build/WebGL # Изменяем права доступа на 777 (все права)
-          rm -rf build/WebGL
-
-          
       - name: Upload WebGL Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build-WebGL
-          path: .
+          name: build-WebGLe
+          path: build/WebGLe
           
   deployPages:
     needs: buildWebGL
@@ -74,11 +66,11 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: build-WebGL
-          path: .
+          name: build-WebGLe
+          path: build/WebGLe
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: .
+          folder: build/WebGLe
