@@ -12,7 +12,33 @@ jobs:
     name: Build for WebGL 🖥️
     runs-on: ubuntu-latest
     steps:
-      # ... (Your existing steps for checkout, LFS, cache, etc.) ...
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+      - name: Restore LFS cache
+        uses: actions/cache@v3
+        id: lfs-cache
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+
+      - name: Git LFS Pull
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+
+      - name: Restore Library cache
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-build-WebGL
+          restore-keys: |
+            Library-build-WebGL-
+            Library-
 
       - name: Build WebGL
         uses: game-ci/unity-builder@v4
@@ -20,22 +46,16 @@ jobs:
           targetPlatform: WebGL
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           buildName: build-WebGL
-          buildPath: build/WebGL # This remains the same
-          unityVersion: '2022.3.51f1'
+          buildPath: build/WebGL
+          unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
           license: ${{ secrets.UNITY_LICENSE }}
-
-      - name: Move WebGL build to root
-        run: |
-          mkdir -p ./
-          cp -r build/WebGL/* ./
-          rm -rf build/WebGL
 
       - name: Upload WebGL Build Artifact
         uses: actions/upload-artifact@v3
         with:
           name: build-WebGL
-          path: . # Uploads the entire root directory containing the build
-
+          path: .
+          
   deployPages:
     needs: buildWebGL
     name: Deploy to Github Pages 🚀
@@ -47,10 +67,10 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-WebGL
-          path: . # Downloads to the root directory
+          path: .
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: . # Deploys from the root directory
+          folder: .
