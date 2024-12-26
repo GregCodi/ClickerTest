@@ -53,8 +53,10 @@ jobs:
 
       - name: Copy build to root
         run: |
-            cp -r build/WebGL/* .
-            rm -rf build/WebGL # Удаляем временную директорию
+          cp -r build/WebGL/* .
+          chmod -R 777 build/WebGL # Изменяем права доступа на 777 (все права)
+          rm -rf build/WebGL
+
           
       - name: Upload WebGL Build Artifact
         uses: actions/upload-artifact@v3
