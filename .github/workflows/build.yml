@@ -56,9 +56,6 @@ jobs:
           name: build-WebGL
           path: bild/WebGL
           
-      - name: Check build directory
-        run: ls -la bild/WebGL
-
   deployPages:
     needs: buildWebGL
     name: Deploy to Github Pages 🚀
@@ -70,7 +67,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-WebGL
-          path: bild
+          path: bild/WebGL
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
