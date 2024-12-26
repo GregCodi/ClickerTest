@@ -69,8 +69,13 @@ jobs:
           name: build-WebGL
           path: build/WebGL
 
+      - name: Extract build contents
+        run: |
+          mkdir -p build-deploy
+          cp -r build/WebGL/* build-deploy/
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: build/WebGL
+          folder: build-deploy
