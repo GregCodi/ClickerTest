@@ -9,6 +9,7 @@ env:
 
 jobs:
   buildWebGL:
+    permissions: write-all
     name: Build for WebGL 🖥️
     runs-on: ubuntu-latest
     steps:
