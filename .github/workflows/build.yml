@@ -46,7 +46,7 @@ jobs:
           targetPlatform: WebGL
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           buildName: build-WebGL
-          buildPath: bild/WebGL
+          buildPath: build/WebGL
           unityVersion: '2022.3.51f1'  # Укажите вашу версию Unity
           license: ${{ secrets.UNITY_LICENSE }}
 
@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-WebGL
-          path: bild/WebGL
+          path: build/WebGL
           
   deployPages:
     needs: buildWebGL
@@ -67,10 +67,10 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: build-WebGL
-          path: bild/WebGL
+          path: build/WebGL
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: bild/WebGL
+          folder: build/WebGL
